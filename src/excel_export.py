@@ -1,12 +1,10 @@
 """
-excel_export.py
----------------
 Colour-coded Excel output matching the production reporting format.
 
 Zone colours:
-  green  (#92D050) — Keine Reklamation  (confident machine problem)
-  yellow (#FFFF00) — Unsicher           (model uncertain, review needed)
-  red    (#FF0000) — Reklamation        (likely paper problem)
+  green  (#92D050) - Keine Reklamation  (confident machine problem)
+  yellow (#FFFF00) - Unsicher           (model uncertain, review needed)
+  red    (#FF0000) - Reklamation        (likely paper problem)
 """
 
 import logging
