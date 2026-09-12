@@ -1,6 +1,4 @@
 """
-cli.py
-------
 Command-line interface for training, scoring, and single-event prediction.
 
 Usage:
@@ -85,14 +83,14 @@ def main() -> None:
         art    = load_artefact(args.model_dir, fold=args.fold)
         result = predict_single(args.event_json, art)
 
-        print("\n── Prediction ──────────────────────────────────────")
+        print("\n Prediction ")
         print(f"  Event        : {result['event_id']}")
         print(f"  Prediction   : {result['prediction']}  ({result['label_str']})")
         print(f"  Probability  : {result['probability']:.4f}")
         print(f"  Score        : {result['score_%']:.1f}%")
         print(f"  Zone         : {result['einschaetzung']}  ({result['farbe']})")
         print(f"  Threshold    : {result['threshold']:.3f}")
-        print("────────────────────────────────────────────────────\n")
+        print("\n")
 
         out_path = Path(args.event_json).parent / f"{result['event_id']}_prediction.csv"
         pd.DataFrame([result]).to_csv(out_path, index=False)
