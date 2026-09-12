@@ -1,6 +1,4 @@
 """
-api.py
-------
 FastAPI microservice for single-event and batch prediction.
 
 Endpoints:
@@ -31,7 +29,6 @@ from .inference import load_artefact, _infer, _zone_label, _zone_colour
 
 log = logging.getLogger(__name__)
 
-# ── App setup ─────────────────────────────────────────────────────────────────
 app = FastAPI(
     title="ts-fault-classification",
     description="Industrial fault classification from camera CV scores + metadata.",
@@ -53,8 +50,6 @@ def _load_model():
     except Exception as e:
         log.error("Failed to load model: %s", e)
 
-
-# ── Request / response schemas ────────────────────────────────────────────────
 
 class FrameScore(BaseModel):
     no_defect:    float
@@ -98,8 +93,6 @@ class PredictionResponse(BaseModel):
     farbe:         str
     threshold:     float
 
-
-# ── Endpoints ─────────────────────────────────────────────────────────────────
 
 @app.get("/health")
 def health():
