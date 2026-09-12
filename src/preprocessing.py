@@ -1,6 +1,4 @@
 """
-preprocessing.py
-----------------
 Event loading, sequence building, and feature extraction.
 
 Handles:
@@ -9,12 +7,12 @@ Handles:
   - Building flat feature vectors (68 numeric + 3 categorical)
   - Parsing metadata fields with unit stripping
 
-Feature vector layout (fixed — never reorder):
+Feature vector layout (fixed - never reorder):
   [0:58]  camera features  (29 per camera × 2 cameras)
   [58:60] cross-camera tear diff
   [60:63] cam meta (padding fractions, camera2 present flag)
   [63:68] numeric metadata (speed, grammage, web_width, pap_len, detector)
-  [68:71] categorical metadata (printer, grade, paper_supplier) — raw, OHE applied later
+  [68:71] categorical metadata (printer, grade, paper_supplier) - raw, OHE applied later
 """
 
 import re
@@ -29,13 +27,12 @@ from tqdm import tqdm
 
 log = logging.getLogger(__name__)
 
-# ── Constants ─────────────────────────────────────────────────────────────────
 TIMESTEPS            = 300
 NUM_FEATURES_PER_CAM = 5
 MIN_VALID_FRAMES     = 10
 SCORE_KEYS           = ["no_defect", "defect", "rollenwechsel", "Kantenfehler", "tear"]
 
-# Feature name registry (68 numeric — fixed order)
+# Feature name registry (68 numeric in fixed order)
 _SCORE_NAMES = ["no_defect", "defect", "rollenwechsel", "kantenfehler", "tear"]
 _CAM_NAMES   = ["cam1", "cam2"]
 
@@ -63,8 +60,6 @@ CAT_COL_NAMES = ["printer", "grade", "paper_supplier"]
 
 assert len(NUM_FEATURE_NAMES) == 68, f"Feature count mismatch: {len(NUM_FEATURE_NAMES)}"
 
-
-# ── Frame helpers ─────────────────────────────────────────────────────────────
 
 def is_valid_frame(frame: dict) -> bool:
     scores = frame.get("scores")
@@ -153,9 +148,6 @@ def build_event_sequence(valid_cams: list) -> tuple[np.ndarray | None, dict | No
     }
     return X_seq, cam_meta
 
-
-# ── Metadata helpers ──────────────────────────────────────────────────────────
-
 def parse_numeric(value) -> float:
     """Strips units from strings like '2.1 m/s' → 2.1."""
     if value is None:
@@ -184,8 +176,6 @@ def parse_metadata(ev: dict) -> dict:
         "date_time_str":   ev.get("date_time_str"),
     }
 
-
-# ── Feature engineering ───────────────────────────────────────────────────────
 
 def _entropy(probs: np.ndarray) -> np.ndarray:
     eps = 1e-12
@@ -269,9 +259,6 @@ def split_num_cat(raw: list) -> tuple[np.ndarray, np.ndarray]:
     X_num = np.array([r[:-3] for r in raw], dtype=float)
     X_cat = np.array([r[-3:] for r in raw])
     return X_num, X_cat
-
-
-# ── Dataset loaders ───────────────────────────────────────────────────────────
 
 def _labels_from_zip(zip_path: str) -> dict:
     labels = {}
