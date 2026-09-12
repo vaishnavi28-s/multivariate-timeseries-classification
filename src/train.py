@@ -1,12 +1,10 @@
 """
-train.py
---------
 Training pipeline: stratified CV, feature extraction, XGBoost,
 threshold tuning, artefact saving.
 
 Each fold saves one artefact:
     processed_data/xgb_models/xgb_fold_{n}.pkl
-    → { model, scaler, ohe, threshold, auc, accuracy, fpr }
+    -> { model, scaler, ohe, threshold, auc, accuracy, fpr }
 
 Fold 1 is the best-performing fold and is used for production inference.
 """
@@ -91,13 +89,13 @@ def train(data_dir: str, output_dir: str = "./processed_data") -> None:
 
         log.info("Train %s | Val %s | Test %s", X_tr_num.shape, X_vl_num.shape, X_te_num.shape)
 
-        # one-hot encode — fit on train only
+        # one-hot encode fit on train only
         ohe = OneHotEncoder(sparse_output=False, handle_unknown="ignore")
         X_tr_ohe = ohe.fit_transform(X_tr_cat)
         X_vl_ohe = ohe.transform(X_vl_cat)
         X_te_ohe = ohe.transform(X_te_cat)
 
-        # scale numerics — fit on train only
+        # scale numerics fit on train only
         scaler = StandardScaler()
         X_tr   = np.hstack([scaler.fit_transform(X_tr_num), X_tr_ohe])
         X_vl   = np.hstack([scaler.transform(X_vl_num),    X_vl_ohe])
