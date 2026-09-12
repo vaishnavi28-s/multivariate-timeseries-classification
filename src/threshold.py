@@ -1,6 +1,4 @@
 """
-threshold.py
-------------
 Decision boundary threshold tuning on the validation set.
 
 Rather than using the default 0.5 threshold, we search for the threshold
@@ -8,7 +6,7 @@ that maximises F1 on the validation set. This is critical for imbalanced
 industrial data where the minority class (paper_problem, ~8.5% of events)
 must be recalled reliably.
 
-Threshold is tuned per fold and saved as part of the artefact — it is
+Threshold is tuned per fold and saved as part of the artefact -it is
 applied at inference time without recomputation.
 """
 
