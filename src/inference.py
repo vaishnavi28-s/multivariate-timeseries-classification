@@ -1,16 +1,14 @@
 """
-inference.py
-------------
 Production inference: load artefact, run predictions, write outputs.
 
 Supports three modes (called from cli.py):
-  score   — batch scoring of new monthly events
-  predict — single-event check
+  score   - batch scoring of new monthly events
+  predict - single-event check
 
 Zone thresholds (data-driven from 14,073 labelled events):
-  prob < 0.30  → green  / Keine Reklamation  (95.8% truly machine — reliable)
-  0.30–0.69   → yellow / Unsicher            (genuinely ambiguous)
-  prob ≥ 0.70  → red    / Reklamation        (62.7%+ truly paper)
+  prob < 0.30  - green  / Keine Reklamation  (95.8% truly machine - reliable)
+  0.30–0.69   - yellow / Unsicher            (genuinely ambiguous)
+  prob ≥ 0.70  - red    / Reklamation        (62.7%+ truly paper)
 """
 
 import logging
@@ -62,7 +60,7 @@ def load_artefact(model_dir: str, fold: int = DEFAULT_FOLD) -> dict:
 
 def _infer(X_seq: np.ndarray, event_data: list, art: dict) -> pd.DataFrame:
     """
-    Core inference: feature extraction → preprocessing → predict → DataFrame.
+    Core inference: feature extraction -> preprocessing -> predict -> DataFrame.
     """
     raw     = extract_features(X_seq, event_data)
     X_num, X_cat = split_num_cat(raw)
