@@ -12,7 +12,7 @@ Feature vector layout (fixed - never reorder):
   [58:60] cross-camera tear diff
   [60:63] cam meta (padding fractions, camera2 present flag)
   [63:68] numeric metadata (speed, grammage, web_width, pap_len, detector)
-  [68:71] categorical metadata (printer, grade, paper_supplier) - raw, OHE applied later
+  [68:71] categorical metadata (pmachine_id, material_grade, supplier) - raw, OHE applied later
 """
 
 import re
