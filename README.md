@@ -14,11 +14,10 @@ More figures from the thesis (data structure, model comparison, ablation, GPT-4o
 
 Two signal types per event: time-series defect scores (vision system) and static metadata (machine, speed, grade, supplier).
 
-![Web break event analysis](images/fig3_4_class_distribution.png)
-
-84/16 class imbalance. Machine- and paper-caused breaks show different temporal shapes: machine-caused decays gradually over the full 300-frame sequence, paper-caused stays flat until a sudden collapse near the end.
+84/16 class imbalance. Machine and paper-caused breaks show different temporal shapes: machine-caused decays gradually over the full 300-frame sequence, paper-caused stays flat until a sudden collapse near the end.
 
 **Metadata fusion adds +0.070 AUC to XGBoost, +0.028 to TapNet.**
+![Web break event analysis](images/fig3_4_class_distribution.png)
 
 ---
 
@@ -38,13 +37,12 @@ Two signal types per event: time-series defect scores (vision system) and static
 | TapNet + metadata | 0.8100 ± 0.0072 |
 | **XGBoost + metadata** | **0.8595 ± 0.0009** |
 
-Chart: [`images/fig5_2_model_comparison.png`](images/fig5_2_model_comparison.png)
-
 **Why metadata helps XGBoost more:** XGBoost splits directly on categorical metadata, a tree can isolate "supplier X + high speed" in one split, no extra learning needed. TapNet has no equivalent: metadata is concatenated as extra input and the network must discover its relevance through gradient descent across the full 300-timestep sequence. That architectural gap is why identical metadata buys XGBoost 2.5x the AUC gain. Chart: [`images/table5_12_metadata_ablation.png`](images/table5_12_metadata_ablation.png).
 
 **Why not just prompt an LLM?** GPT-4o given the exact XGBoost decision rules still collapsed minority recall 46%→18%. Both LLM configs underperform even the CNN baseline. This behaviour was studied later and became the basis for a separate paper, Derivation Boundaries: A Structural Source of Faithfulness Failure in Large Language Models (accepted, JCFS 2026). Chart: [`images/fig5_3_gpt4o_results.png`](images/fig5_3_gpt4o_results.png).
 
 Full benchmarking notebook: [`experiments/benchmark.ipynb`](experiments/benchmark.ipynb)
+Chart: [`images/fig5_2_model_comparison.png`](images/fig5_2_model_comparison.png)
 
 ---
 
@@ -90,10 +88,8 @@ features           (printer, grade,
 
 Real system also served predictions via FastAPI in production. Not reproduced here for confidentiality purposes.
 
-![Deployment architecture](images/deployment_architecture.png)
-
 The confidence-based routing design proposed in the thesis (three-zone red/amber/green classification) was implemented as a production microservice after thesis submission, matching the proposed design.
-
+![Deployment architecture](images/deployment_architecture.png)
 ---
 
 ## Key design decisions
