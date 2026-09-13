@@ -89,6 +89,7 @@ features           (printer, grade,
 Real system also served predictions via FastAPI in production. Not reproduced here for confidentiality purposes.
 
 The confidence-based routing design proposed in the thesis (three-zone red/amber/green classification) was implemented as a production microservice after thesis submission, matching the proposed design.
+
 ![Deployment architecture](images/deployment_architecture.png)
 ---
 
