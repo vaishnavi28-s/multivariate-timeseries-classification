@@ -116,7 +116,7 @@ The confidence-based routing design proposed in the thesis (three-zone red/amber
 
 ## Data
 
-Ships no data - bring your own event JSONs. Schema: [`data/README.md`](data/README.md).
+Ships mock data; bring your own event JSONs. Schema: [`data/README.md`](data/README.md).
 
 Originally built on proprietary sensor data at Bertelsmann Marketing Services, Germany.
 
