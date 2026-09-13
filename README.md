@@ -40,9 +40,9 @@ Two signal types per event: time-series defect scores (vision system) and static
 
 Chart: [`images/fig5_2_model_comparison.png`](images/fig5_2_model_comparison.png)
 
-**Why metadata helps XGBoost more:** XGBoost splits directly on categorical metadata — a tree can isolate "supplier X + high speed" in one split, no extra learning needed. TapNet has no equivalent: metadata is concatenated as extra input, and the network must discover its relevance through gradient descent across the full 300-timestep sequence. That architectural gap is why identical metadata buys XGBoost 2.5x the AUC gain. Chart: [`images/table5_12_metadata_ablation.png`](images/table5_12_metadata_ablation.png).
+**Why metadata helps XGBoost more:** XGBoost splits directly on categorical metadata, a tree can isolate "supplier X + high speed" in one split, no extra learning needed. TapNet has no equivalent: metadata is concatenated as extra input and the network must discover its relevance through gradient descent across the full 300-timestep sequence. That architectural gap is why identical metadata buys XGBoost 2.5x the AUC gain. Chart: [`images/table5_12_metadata_ablation.png`](images/table5_12_metadata_ablation.png).
 
-**Why not just prompt an LLM?** GPT-4o given the exact XGBoost decision rules still collapsed minority recall 46%→18%. Both LLM configs underperform even the CNN baseline. Chart: [`images/fig5_3_gpt4o_results.png`](images/fig5_3_gpt4o_results.png).
+**Why not just prompt an LLM?** GPT-4o given the exact XGBoost decision rules still collapsed minority recall 46%→18%. Both LLM configs underperform even the CNN baseline. This behaviour was studied later and became the basis for a separate paper, Derivation Boundaries: A Structural Source of Faithfulness Failure in Large Language Models (accepted, JCFS 2026). Chart: [`images/fig5_3_gpt4o_results.png`](images/fig5_3_gpt4o_results.png).
 
 Full benchmarking notebook: [`experiments/benchmark.ipynb`](experiments/benchmark.ipynb)
 
@@ -98,25 +98,25 @@ The confidence-based routing design proposed in the thesis (three-zone red/amber
 
 ## Key design decisions
 
-**Train-only normalisation** — scaler/OHE fit on train only. Avoids leakage.
+**Train-only normalisation** - scaler/OHE fit on train only. Avoids leakage.
 
-**Per-fold threshold tuning** — maximises F1 on the minority class (~8.5% of events). Default 0.5 underperforms badly here.
+**Per-fold threshold tuning** - maximises F1 on the minority class (~8.5% of events). Default 0.5 underperforms badly here.
 
-**Metadata as first-class input** — encoded and fused at the model level, not bolted on.
+**Metadata as first-class input** - encoded and fused at the model level, not bolted on.
 
 **Zone-based output:**
 
 | Zone | Probability | Meaning |
 |---|---|---|
 | 🟢 Keine Reklamation | < 0.30 | 95.8% truly machine fault |
-| 🟡 Unsicher | 0.30 – 0.69 | Ambiguous — review needed |
+| 🟡 Unsicher | 0.30 - 0.69 | Ambiguous - review needed |
 | 🔴 Reklamation | ≥ 0.70 | 62.7%+ truly paper fault |
 
 ---
 
 ## Data
 
-Ships no data — bring your own event JSONs. Schema: [`data/README.md`](data/README.md).
+Ships no data - bring your own event JSONs. Schema: [`data/README.md`](data/README.md).
 
 Originally built on proprietary sensor data at Bertelsmann Marketing Services, Germany.
 
@@ -140,7 +140,7 @@ python -m src.cli predict --event_json /path/to/event.json
 ```bash
 python -m src.cli train --data_dir data
 ```
-Small, easy dataset — proves the pipeline runs. AUC will look artificially high; real numbers are above.
+Small, easy dataset, proves the pipeline runs. AUC will look artificially high; real numbers are above.
 
 ---
 
