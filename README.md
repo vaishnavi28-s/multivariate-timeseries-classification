@@ -1,7 +1,6 @@
 # multivariate-ts-classification
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 End-to-end multivariate time-series fault classification pipeline with static metadata fusion built and deployed as a production microservice at **Bertelsmann Marketing Services**.
 
