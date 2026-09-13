@@ -97,11 +97,12 @@ features           (printer, grade,
 └──────────────────────────────────────────┘
 ```
 
-Real system also served predictions via FastAPI in production. Not reproduced here — never independently rebuilt/tested outside the original deployment.
+Real system also served predictions via FastAPI in production. Not reproduced here in the repo as per confidentiality agreement.
 
 ![Proposed deployment architecture](images/deployment_architecture.png)
 
-Proposed extension: confidence-based routing to auto-approve high-confidence predictions, flag ambiguous ones for review. Proposal only, not part of confirmed production.
+Proposed extension: confidence-based routing to auto-approve high-confidence predictions, flag ambiguous ones for review.
+
 
 ---
 
