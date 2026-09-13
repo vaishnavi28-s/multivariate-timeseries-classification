@@ -176,6 +176,3 @@ multivariate-ts-classification/
 }
 ```
 
-## License
-
-MIT
