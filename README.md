@@ -1,10 +1,12 @@
-# multivariate-ts-classification
+# Multivariate-ts-Classification
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
 
 Multivariate time-series fault classification with metadata fusion. Built and deployed as a production microservice at **Bertelsmann Marketing Services**, ~0.86 AUC held on live production data.
 
-This repo reproduces the research pipeline (feature engineering, benchmarking, ablation) as runnable, tested code along with proposed production architecture which is actually implemented and running live.
+This repo reproduces the research pipeline (feature engineering, benchmarking, ablation) as runnable, tested code along with proposed deployment architecture.
+
+More figures from the thesis (data structure, model comparison, ablation, GPT-4o results) are in [`images/`](images/).
 
 ---
 
@@ -12,11 +14,9 @@ This repo reproduces the research pipeline (feature engineering, benchmarking, a
 
 Two signal types per event: time-series defect scores (vision system) and static metadata (machine, speed, grade, supplier).
 
-![Event data structure](images/fig3_3_data_structure.png)
+![Web break event analysis](images/fig3_4_class_distribution.png)
 
-![Class distribution and temporal signature](images/fig3_4_class_distribution.png)
-
-84/16 class imbalance. Machine- and paper-caused breaks show different temporal shapes — that's the signal every model here is trying to learn.
+84/16 class imbalance. Machine- and paper-caused breaks show different temporal shapes: machine-caused decays gradually over the full 300-frame sequence, paper-caused stays flat until a sudden collapse near the end.
 
 **Metadata fusion adds +0.070 AUC to XGBoost, +0.028 to TapNet.**
 
@@ -25,8 +25,6 @@ Two signal types per event: time-series defect scores (vision system) and static
 ## Results
 
 3-fold CV, 14,073 events.
-
-![Deep learning model comparison](images/fig5_2_model_comparison.png)
 
 | Model | AUC |
 |---|---|
@@ -40,19 +38,13 @@ Two signal types per event: time-series defect scores (vision system) and static
 | TapNet + metadata | 0.8100 ± 0.0072 |
 | **XGBoost + metadata** | **0.8595 ± 0.0009** |
 
-![Class-specific temporal signature](images/fig3_7_temporal_signature.png)
+Chart: [`images/fig5_2_model_comparison.png`](images/fig5_2_model_comparison.png)
 
-Machine-caused: gradual decline over 300 frames. Paper-caused: flat, then sudden collapse ~50 frames out.
+**Why metadata helps XGBoost more:** XGBoost splits directly on categorical metadata — a tree can isolate "supplier X + high speed" in one split, no extra learning needed. TapNet has no equivalent: metadata is concatenated as extra input, and the network must discover its relevance through gradient descent across the full 300-timestep sequence. That architectural gap is why identical metadata buys XGBoost 2.5x the AUC gain. Chart: [`images/table5_12_metadata_ablation.png`](images/table5_12_metadata_ablation.png).
 
-![Metadata ablation](images/table5_12_metadata_ablation.png)
+**Why not just prompt an LLM?** GPT-4o given the exact XGBoost decision rules still collapsed minority recall 46%→18%. Both LLM configs underperform even the CNN baseline. Chart: [`images/fig5_3_gpt4o_results.png`](images/fig5_3_gpt4o_results.png).
 
-Metadata helps both models; XGBoost uses it ~1.6x more effectively than deep fusion.
-
-![GPT-4o classifier results](images/fig5_3_gpt4o_results.png)
-
-GPT-4o given the exact XGBoost decision rules still collapsed minority recall 46%→18%. Both LLM configs underperform even the CNN baseline.
-
-Full results: [`experiments/benchmark.ipynb`](experiments/benchmark.ipynb)
+Full benchmarking notebook: [`experiments/benchmark.ipynb`](experiments/benchmark.ipynb)
 
 ---
 
@@ -96,12 +88,11 @@ features           (printer, grade,
 └──────────────────────────────────────────┘
 ```
 
-Real system also served predictions via FastAPI in production. Not reproduced here in the repo as per confidentiality agreement.
+Real system also served predictions via FastAPI in production. Not reproduced here for confidentiality purposes.
 
-![Proposed deployment architecture](images/deployment_architecture.png)
+![Deployment architecture](images/deployment_architecture.png)
 
-Proposed extension: confidence-based routing to auto-approve high-confidence predictions, flag ambiguous ones for review.
-
+The confidence-based routing design proposed in the thesis (three-zone red/amber/green classification) was implemented as a production microservice after thesis submission, matching the proposed design.
 
 ---
 
@@ -147,7 +138,7 @@ python -m src.cli predict --event_json /path/to/event.json
 
 **No data? Try the demo:**
 ```bash
-python -m src.cli train --data_dir data/demo
+python -m src.cli train --data_dir data
 ```
 Small, easy dataset — proves the pipeline runs. AUC will look artificially high; real numbers are above.
 
@@ -169,8 +160,8 @@ multivariate-ts-classification/
 │   └── README.md
 ├── tests/
 ├── configs/
+├── images/
 ├── data/
-│   ├── demo/
 │   └── README.md
 └── requirements.txt
 ```
@@ -187,3 +178,7 @@ multivariate-ts-classification/
   url    = {https://github.com/vaishnavi28-s/multivariate-timeseries-classification}
 }
 ```
+
+## License
+
+MIT
