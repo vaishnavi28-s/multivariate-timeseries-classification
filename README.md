@@ -1,11 +1,10 @@
 # multivariate-ts-classification
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-Multivariate time-series fault classification with metadata fusion. Built and deployed as a production microservice at **Bertelsmann Marketing Services** — ~0.86 AUC held on live production data.
+Multivariate time-series fault classification with metadata fusion. Built and deployed as a production microservice at **Bertelsmann Marketing Services**, ~0.86 AUC held on live production data.
 
-This repo reproduces the research pipeline (feature engineering, benchmarking, ablation) as runnable, tested code. No live service — CLI only.
+This repo reproduces the research pipeline (feature engineering, benchmarking, ablation) as runnable, tested code along with proposed production architecture which is actually implemented and running live.
 
 ---
 
